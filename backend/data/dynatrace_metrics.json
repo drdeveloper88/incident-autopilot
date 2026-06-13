@@ -1,0 +1,184 @@
+{
+  "services": [
+    {
+      "service_name": "patient-db-service",
+      "health_status": "CRITICAL",
+      "response_time_ms": {
+        "avg": 2850,
+        "p50": 1200,
+        "p90": 5600,
+        "p95": 8200,
+        "p99": 30000
+      },
+      "error_rate_percent": 12.5,
+      "throughput_requests_per_min": 4500,
+      "cpu_usage_percent": 78,
+      "memory_usage_percent": 82,
+      "connection_pool": {
+        "total": 20,
+        "active": 20,
+        "idle": 0,
+        "waiting": 3
+      },
+      "recent_failures": 625,
+      "last_incident": "2026-06-06T14:55:00Z",
+      "affected_services": ["appointment-service", "clinical-staff-ui"]
+    },
+    {
+      "service_name": "lab-results-service",
+      "health_status": "DEGRADED",
+      "response_time_ms": {
+        "avg": 850,
+        "p50": 450,
+        "p90": 2100,
+        "p95": 3400,
+        "p99": 6500
+      },
+      "error_rate_percent": 2.1,
+      "throughput_requests_per_min": 1200,
+      "cpu_usage_percent": 65,
+      "memory_usage_percent": 85,
+      "memory_alert": {
+        "current_heap_mb": 3400,
+        "max_heap_mb": 4000,
+        "gc_overhead_percent": 18
+      },
+      "recent_failures": 25,
+      "last_incident": "2026-06-06T12:20:00Z",
+      "recommendations": [
+        "Memory leak detected - consider increasing heap size",
+        "Check for long-running queries in database",
+        "Review garbage collection settings"
+      ]
+    },
+    {
+      "service_name": "api-gateway",
+      "health_status": "DEGRADED",
+      "response_time_ms": {
+        "avg": 120,
+        "p50": 50,
+        "p90": 350,
+        "p95": 680,
+        "p99": 1500
+      },
+      "error_rate_percent": 8.3,
+      "throughput_requests_per_min": 8900,
+      "cpu_usage_percent": 45,
+      "memory_usage_percent": 62,
+      "rate_limiting": {
+        "enabled": true,
+        "limit_per_hour": 5000,
+        "current_rate_violations": 127,
+        "top_clients": [
+          {
+            "client_id": "mobile-app-v2.1",
+            "requests_per_hour": 5001,
+            "violation_count": 1
+          }
+        ]
+      },
+      "recent_failures": 744,
+      "last_incident": "2026-06-06T14:52:00Z"
+    },
+    {
+      "service_name": "billing-service",
+      "health_status": "CRITICAL",
+      "response_time_ms": {
+        "avg": 3200,
+        "p50": 2100,
+        "p90": 7800,
+        "p95": 12500,
+        "p99": 35000
+      },
+      "error_rate_percent": 45.2,
+      "throughput_requests_per_min": 150,
+      "cpu_usage_percent": 92,
+      "memory_usage_percent": 78,
+      "database_connection": {
+        "status": "FAILED",
+        "attempts": 5,
+        "failures": 5,
+        "last_error": "Unable to connect to data warehouse"
+      },
+      "recent_failures": 68,
+      "last_incident": "2026-06-06T14:48:00Z",
+      "affected_services": ["finance-dashboard", "invoice-generation"]
+    },
+    {
+      "service_name": "auth-service",
+      "health_status": "HEALTHY",
+      "response_time_ms": {
+        "avg": 380,
+        "p50": 200,
+        "p90": 950,
+        "p95": 1850,
+        "p99": 5100
+      },
+      "error_rate_percent": 0.8,
+      "throughput_requests_per_min": 3400,
+      "cpu_usage_percent": 35,
+      "memory_usage_percent": 48,
+      "token_operations": {
+        "refresh_avg_ms": 380,
+        "validation_avg_ms": 120,
+        "successful_operations": 12450,
+        "failed_operations": 3
+      },
+      "recent_failures": 0,
+      "last_incident": null
+    },
+    {
+      "service_name": "appointment-service",
+      "health_status": "HEALTHY",
+      "response_time_ms": {
+        "avg": 550,
+        "p50": 300,
+        "p90": 1400,
+        "p95": 2200,
+        "p99": 4500
+      },
+      "error_rate_percent": 1.2,
+      "throughput_requests_per_min": 2100,
+      "cpu_usage_percent": 42,
+      "memory_usage_percent": 55,
+      "recent_failures": 0,
+      "last_incident": null,
+      "dependencies": {
+        "patient-db-service": "CRITICAL",
+        "auth-service": "HEALTHY"
+      }
+    }
+  ],
+  "cluster_metrics": {
+    "total_services": 6,
+    "healthy_services": 2,
+    "degraded_services": 2,
+    "critical_services": 2,
+    "overall_error_rate_percent": 11.7,
+    "overall_avg_response_time_ms": 1163
+  },
+  "alerts": [
+    {
+      "alert_id": "dynatrace-001",
+      "severity": "CRITICAL",
+      "title": "Database Service - Response Time Critical",
+      "description": "patient-db-service response time exceeded 2000ms threshold",
+      "timestamp": "2026-06-06T14:55:00Z"
+    },
+    {
+      "alert_id": "dynatrace-002",
+      "severity": "CRITICAL",
+      "title": "Billing Service - Database Connection Failed",
+      "description": "Unable to connect to data warehouse. All billing operations failing.",
+      "timestamp": "2026-06-06T14:48:00Z"
+    },
+    {
+      "alert_id": "dynatrace-003",
+      "severity": "WARNING",
+      "title": "Lab Results Service - Memory Pressure",
+      "description": "Heap utilization at 85%. Potential memory leak detected.",
+      "timestamp": "2026-06-06T14:50:00Z"
+    }
+  ],
+  "timestamp": "2026-06-06T15:00:00Z"
+}

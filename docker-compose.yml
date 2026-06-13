@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (optional, for future integration)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: ticket-resolution-db
+  #   environment:
+  #     POSTGRES_DB: ticket_db
+  #     POSTGRES_USER: ticket_user
+  #     POSTGRES_PASSWORD: ticket_password
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - ticket-network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ticket_user"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Ollama LLM Service (Local LLM fallback)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ticket-resolution-ollama
+    ports:
+      - "11434:11434"
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ticket-network
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: serve
+    # Note: To pull a model, run: docker exec ticket-resolution-ollama ollama pull llama2
+
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ticket-resolution-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Primary LLM (Groq)
+      GROQ_API_KEY: ${GROQ_API_KEY:-your_groq_api_key}
+      GROQ_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}
+      
+      # Fallback LLM (Ollama)
+      OLLAMA_ENABLED: ${OLLAMA_ENABLED:-true}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama2}
+      USE_OLLAMA_FALLBACK: ${USE_OLLAMA_FALLBACK:-true}
+      
+      # API Configuration
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      
+      # Python
+      PYTHONUNBUFFERED: 1
+      PYTHONDONTWRITEBYTECODE: 1
+    
+    volumes:
+      - ./backend:/app
+      - ./backend/data:/app/data
+      - ./backend/logs:/app/logs
+    networks:
+      - ticket-network
+    depends_on:
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ticket-resolution-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:8000}
+      NODE_ENV: production
+    volumes:
+      - ./frontend/public:/app/public:ro
+    networks:
+      - ticket-network
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  ticket-network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+    driver: local
+  # postgres_data:
+  #   driver: local

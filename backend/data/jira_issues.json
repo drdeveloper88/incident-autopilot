@@ -1,0 +1,81 @@
+{
+  "issues": [
+    {
+      "key": "HOSP-001",
+      "summary": "Critical: Patient Database Connection Timeout",
+      "description": "The patient database is experiencing intermittent connection timeouts during peak hours (8 AM - 10 AM EST). This affects patient record retrieval and appointment scheduling.",
+      "status": "In Progress",
+      "priority": "Critical",
+      "assignee": "john.smith@hospital.com",
+      "reporter": "alert.system@hospital.com",
+      "created": "2026-06-06T08:15:00Z",
+      "updated": "2026-06-06T14:30:00Z",
+      "labels": ["database", "production", "urgent"],
+      "components": ["Patient Management", "Database"],
+      "affected_users": "All clinical staff",
+      "error_code": "ERR_DB_TIMEOUT_001",
+      "stack_trace": "java.sql.SQLException: Connection timeout after 30000ms"
+    },
+    {
+      "key": "HOSP-002",
+      "summary": "High: Memory Leak in Lab Results Service",
+      "description": "Lab Results Service is consuming increasing memory over 72 hours. Currently at 85% heap usage. Service restart temporarily resolves issue.",
+      "status": "Open",
+      "priority": "High",
+      "assignee": "sarah.johnson@hospital.com",
+      "reporter": "monitoring@hospital.com",
+      "created": "2026-06-04T16:45:00Z",
+      "updated": "2026-06-06T12:20:00Z",
+      "labels": ["memory", "performance", "java"],
+      "components": ["Lab Services", "Backend"],
+      "affected_users": "Lab technicians, Clinical staff",
+      "error_code": "ERR_MEM_LEAK_002"
+    },
+    {
+      "key": "HOSP-003",
+      "summary": "Medium: API Rate Limiting Issues on Mobile App",
+      "description": "Mobile app users reporting 'Too Many Requests' errors when syncing patient data. API gateway rate limiter may need adjustment.",
+      "status": "Open",
+      "priority": "Medium",
+      "assignee": "mike.chen@hospital.com",
+      "reporter": "support@hospital.com",
+      "created": "2026-06-05T10:30:00Z",
+      "updated": "2026-06-06T11:00:00Z",
+      "labels": ["api", "mobile", "rate-limiting"],
+      "components": ["API Gateway", "Mobile App"],
+      "affected_users": "Mobile app users",
+      "error_code": "ERR_RATE_LIMIT_003"
+    },
+    {
+      "key": "HOSP-004",
+      "summary": "Low: Documentation Update Required for New Auth Flow",
+      "description": "OAuth2 implementation documentation is outdated. Needs update for new authentication flow changes.",
+      "status": "Open",
+      "priority": "Low",
+      "assignee": "emma.williams@hospital.com",
+      "reporter": "dev.team@hospital.com",
+      "created": "2026-06-01T09:00:00Z",
+      "updated": "2026-06-05T14:15:00Z",
+      "labels": ["documentation", "auth"],
+      "components": ["Documentation", "Security"],
+      "affected_users": "Development team"
+    },
+    {
+      "key": "HOSP-005",
+      "summary": "Critical: Billing System Reconciliation Failure",
+      "description": "Billing reconciliation job failed for 3 consecutive days. Affecting invoice generation and revenue tracking.",
+      "status": "Blocked",
+      "priority": "Critical",
+      "assignee": "robert.taylor@hospital.com",
+      "reporter": "finance@hospital.com",
+      "created": "2026-06-03T14:20:00Z",
+      "updated": "2026-06-06T09:45:00Z",
+      "labels": ["billing", "financial", "critical"],
+      "components": ["Billing System", "Data Warehouse"],
+      "affected_users": "Finance staff, Accounting",
+      "error_code": "ERR_BILLING_SYNC_005"
+    }
+  ],
+  "total_issues": 5,
+  "query_timestamp": "2026-06-06T15:00:00Z"
+}

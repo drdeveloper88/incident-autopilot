@@ -1,0 +1,409 @@
+.issue-result {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.issue-title-section h2 {
+  color: #333;
+  margin-bottom: 12px;
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+.issue-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.severity-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.severity-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.severity-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.issue-id {
+  text-align: right;
+}
+
+.issue-id small {
+  color: #999;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
+.result-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  background: rgba(255, 255, 255, 0.5);
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h3 {
+  color: #333;
+  font-size: 16px;
+  margin: 0;
+}
+
+.confidence {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.confidence.high {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.confidence.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.confidence.low {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.step-count {
+  font-size: 12px;
+  font-weight: 600;
+  background: #667eea;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-content p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.steps-list li {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.steps-list li:last-child {
+  margin-bottom: 0;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.step-text {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 4px;
+}
+
+.assigned-to {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.name {
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.metrics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.metric-item:last-child {
+  border-bottom: none;
+}
+
+.metric-label {
+  color: #666;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.metric-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier New', monospace;
+  color: #333;
+  font-weight: 600;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.success {
+  background: #10b981;
+}
+
+.status-dot.failed {
+  background: #ef4444;
+}
+
+.empty {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.timeline-section {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.timeline-section h3 {
+  color: #333;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.timeline-marker {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeline-time {
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.timeline-date {
+  color: #999;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+.error-section {
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.error-section h3 {
+  color: #991b1b;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: #991b1b;
+  font-size: 13px;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+
+.messages-section {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.messages-section h3 {
+  color: #333;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message-item {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  font-size: 12px;
+  align-items: center;
+}
+
+.msg-step {
+  font-weight: 600;
+  color: #667eea;
+  text-transform: uppercase;
+  min-width: 80px;
+}
+
+.msg-time {
+  color: #999;
+  min-width: 60px;
+  text-align: right;
+}
+
+.msg-timestamp {
+  color: #999;
+  font-family: 'Courier New', monospace;
+}
+
+.no-issue {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .result-header {
+    flex-direction: column;
+  }
+
+  .issue-id {
+    text-align: left;
+  }
+
+  .issue-title-section h2 {
+    font-size: 20px;
+  }
+}
