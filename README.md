@@ -27,37 +27,89 @@ Modern operations teams lose time moving incidents between triage, analysis, rem
 
 ```mermaid
 flowchart LR
-    User[User or Operator] --> UI[React Frontend]
-    UI --> API[FastAPI Backend]
-    API --> WF[LangGraph Workflow]
+  User[User or Operator] --> UI[React Frontend]
+  UI --> API[FastAPI Backend]
 
-    WF --> A[Analyze]
-    A --> R[Resolve]
-    R --> V[Validate]
-    V -->|Resolved| Result[Return Resolution]
-    V -->|Unresolved| Assign[Assign Owner]
-    Assign --> Result
+  subgraph Backend Execution Layer
+    API --> Router[Request Validation and Routing]
+    Router --> WF[LangGraph Workflow]
+    WF --> Analyze[Analyze Step]
+    Analyze --> Resolve[Resolve Step]
+    Resolve --> Validate[Validate Step]
+    Validate -->|Resolved| Response[Structured Incident Response]
+    Validate -->|Unresolved| Assign[Assignment Step]
+    Assign --> Response
+  end
 
-    API --> Groq[Groq LLM Primary]
-    API --> Ollama[Ollama Fallback]
-    API --> Store[In-Memory Issue Store]
+  subgraph Model Layer
+    WF --> Groq[Groq Primary LLM]
+    WF --> Ollama[Ollama Fallback LLM]
+  end
+
+  subgraph State Layer
+    API --> Memory[In-Memory Issue Store]
+    WF --> Metrics[Execution Metrics and Audit Messages]
+  end
 ```
 
-### Backend Flow
-1. Client submits an issue to the backend.
-2. FastAPI validates the payload and creates initial workflow state.
-3. LangGraph executes the sequential workflow.
-4. The workflow uses the configured LLM provider to produce analysis and resolution artifacts.
-5. The backend returns a structured response and stores the result in memory for retrieval.
+The platform is organized into four logical layers:
+- presentation layer: React UI for health checks, issue submission, and result review
+- API layer: FastAPI request handling, schema validation, and workflow invocation
+- orchestration layer: LangGraph workflow execution with step-by-step state transitions
+- model layer: Groq-first LLM execution with Ollama fallback support
 
-### Current Workflow Stages
-- `analyze`: determine likely root cause
-- `resolve`: generate remediation steps
-- `validate`: decide whether the remediation is likely to work
-- `assign`: choose an owner if the incident remains unresolved
+### Request Lifecycle
+1. A user creates an incident from the UI or an API client submits it directly.
+2. FastAPI validates the request against the issue schema and initializes workflow state.
+3. The workflow executes in sequence: analyze, resolve, validate, and conditionally assign.
+4. Each workflow step appends execution metadata and message history into the shared state object.
+5. The final response is returned to the caller and cached in the backend's in-memory issue store.
 
-### Current Persistence Model
-Issue results are stored in an in-memory dictionary inside the backend process. This is suitable for local development and demonstrations, but not for durable production storage.
+### Workflow Responsibilities
+| Stage | Responsibility | Output |
+|---|---|---|
+| `analyze` | infer probable technical root cause | `root_cause`, `analysis_confidence` |
+| `resolve` | generate remediation steps | `remediation_steps` |
+| `validate` | assess whether the proposed solution is likely sufficient | `is_resolved` |
+| `assign` | choose an owner if the issue remains unresolved | `assigned_to` |
+
+### Component Responsibilities
+- frontend: captures issue input, checks service health, and renders workflow output
+- backend API: owns validation, workflow invocation, error handling, and response formatting
+- workflow engine: coordinates stateful execution across discrete incident-handling stages
+- LLM providers: generate analytical and operational content used by each workflow step
+- issue store: keeps processed issue results addressable by `issue_id`
+
+### State and Persistence Model
+The current implementation keeps processed incidents in an in-memory dictionary inside the backend process. This is acceptable for local development, demos, and single-instance evaluation, but it is not durable.
+
+For a production deployment, this layer should be replaced with persistent storage such as PostgreSQL, Cosmos DB, or another operational datastore so that:
+- incident history survives restarts
+- multiple backend instances can share state
+- audit and reporting workflows become reliable
+
+### Deployment View
+In local and containerized runs, the standard topology is:
+- React frontend on port `3000`
+- FastAPI backend on port `8000`
+- Ollama fallback service on port `11434`
+
+The production compose file extends this baseline with restart policies, resource constraints, and environment-driven configuration suitable for a more controlled runtime.
+
+### Current Architectural Boundaries
+The current codebase already separates:
+- user interface concerns
+- request validation and API concerns
+- workflow orchestration logic
+- LLM provider configuration
+- deployment concerns through Docker and Compose
+
+That separation makes the project straightforward to evolve toward:
+- persistent storage
+- external incident system integrations
+- approval workflows
+- background workers
+- observability and policy enforcement
 
 ## Technology Stack
 
